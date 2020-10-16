@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravador - Asterisk</title>
+
+    <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+</head>
+
+<% if (fields[0].theme == "on") { %>
+
+<body id="body-theme" class="body-color-dark">
+    <% } else { %>
+
+    <body id="body-theme" class="body-color">
+        <% } %>
+        <nav style="background-color: #fb7712;">
+            <a href="/" class="navbar-brand">
+                <img src="/img/logo.png" alt="logo-guia">
+            </a>
+            <button class="btn btn-outline-info btn-lg"
+                style="color: black; float: right; margin: 5px 35px 0 0;">Logout</button>
+        </nav>
+        <div class="container">
+
+            <hr>
+            <center>
+                <h1>Gravador ligações Asterisk</h1>
+            </center>
+            <hr>
+
+            <% if (fields[0].theme == "on") { %>
+            <div class="card text-white bg-dark mb-3" id="color1">
+                <% } else { %>
+                <div class="card text-dark bg-light mb-3" id="color1">
+                    <% } %>
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                <center>
+                                    <h4>Filtro da ligação</h4>
+                                </center>
+                            </div>
+                            <div class="col">
+                                <label for="tipo-ligacao">Tipo de gravação</label>
+                                <select class="form-control" name="tipo-ligacao" id="tipo-ligacao">
+                                    <option value="1">Operação</option>
+                                    <option value="2">Células de apoio</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST" action="/recorder/filtered">
+
+                            <div class="row">
+
+                                <div class="col">
+                                    <div style="float: right;" class="switch__container">
+                                        <% if (fields[0].theme == "on") { %>
+                                        <input checked name="darkTheme" id="switch-shadow" class="switch switch--shadow"
+                                            type="checkbox" />
+                                        <% } else { %>
+                                        <input name="darkTheme" id="switch-shadow" class="switch switch--shadow"
+                                            type="checkbox" />
+                                        <% } %>
+                                        <label for="switch-shadow"></label>
+                                    </div>
+                                    <div class="col">
+                                        <h6 style="float: right; margin-top: 15px; margin-right: 10px;">Modo escuro</h6>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <label for="dataInicio">Data Início</label>
+                                    <input value="<%= fields[0].dtInicio %>" class="form-control" type="datetime-local"
+                                        name="dataInicio" id="dataInicio" required>
+                                </div>
+                                <div class="col">
+                                    <label for="dataFim">Data Fim</label>
+                                    <input value="<%= fields[0].dtFim %>" class="form-control" type="datetime-local"
+                                        name="dataFim" id="dataFim" required>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="adm">Administradora</label>
+                                    <input name="admHidden" id="admHidden" type="text" hidden readonly>
+                                    <select class="form-control" name="adm" id="adm">
+                                        <% if (fields[0].adm != undefined) { %>
+                                        <option value="<%= fields[0].cConect %>"><%= fields[0].adm %></option>
+                                        <% } else { %>
+                                        <option value="0">Selecione a administradora</option>
+                                        <% } %>
+                                        <% listAdms.forEach(adm => { %>
+                                        <option value="<%= adm.c_conect %>"><%= adm.ADM %></option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                                <div class="col">
+                                    <label for="ramal">Ramal</label>
+                                    <input name="ramalHidden" id="ramalHidden" type="text" hidden readonly>
+                                    <% if (fields[0].adm != 0) { %>
+                                    <select class="form-control" name="ramal" id="ramal">
+                                        <% } else { %>
+                                        <select class="form-control" name="ramal" id="ramal" disabled>
+                                            <% } %>
+                                            <% if (fields[0].ramal != undefined) { %>
+                                            <option value="0"><%= fields[0].ramal %></option>
+                                            <% } else { %>
+                                            <option value="0">Selecione o ramal</option>
+                                            <% } %>
+                                            <% adms.forEach(adm => { %>
+                                            <option value="<%= adm.c_conect %>"><%= adm.ram_ramal %></option>
+                                            <% }) %>
+                                        </select>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="grupo">Grupo</label>
+                                    <input value="<%= fields[0].grupo %>" name="grupo" type="number"
+                                        class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label for="cota">Cota</label>
+                                    <input value="<%= fields[0].cota %>" name="cota" type="number" class="form-control">
+                                </div>
+                                <div class="col">
+                                    <label for="telefone">Telefone</label>
+                                    <input value="<%= fields[0].tel %>" name="telefone" id="telefone" type="text"
+                                        class="form-control" placeholder="(__) __________" maxlength="15">
+                                </div>
+                            </div>
+                            <hr>
+                            <button type="submit" class="btn btn-outline-info btn-lg btn-block">Buscar</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="tableFixHead">
+                    <% if (fields[0].theme == "on") { %>
+                    <table id="color2" class="table table-dark table-striped mb-0">
+                        <% } else { %>
+                        <table id="color2" class="table table-light table-striped mb-0">
+                            <% } %>
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable(0)">Data</th>
+                                    <th onclick="sortTable(1)">Grupo</th>
+                                    <th onclick="sortTable(2)">Cota</th>
+                                    <th onclick="sortTable(3)">ADM</th>
+                                    <th onclick="sortTable(4)">Ranal</th>
+                                    <th onclick="sortTable(5)">Telefone</th>
+                                    <th onclick="sortTable(6)">Duração</th>
+                                    <th onclick="sortTable(7)">Entrante</th>
+                                    <th onclick="sortTable(8)">Usuário</th>
+                                    <th>Áudio</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <% calls.forEach(call => { %>
+                                    <td><%= Intl.DateTimeFormat('pt-BR', {  day: '2-digit', month: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}).format(call.LIG_DATA.setHours(call.LIG_DATA.getHours() + 3)) %>
+                                    </td>
+                                    <td><%= call.LIG_GRUPO %></td>
+                                    <td><%= call.LIG_COTA %></td>
+                                    <td><%= call.LIG_ADMINISTRADORA %></td>
+                                    <td><%= call.LIG_RAMAL %></td>
+                                    <td><%= call.LIG_TELEFONE %></td>
+                                    <td><%= call.LIG_TEMPO %></td>
+                                    <% if (call.LIG_TIPO == "E") { %>
+                                    <td>Sim</td>
+                                    <% } else { %>
+                                    <td>Não</td>
+                                    <% } %>
+                                    <td><%= call.LIG_CODUSR %></td>
+                                    <td>
+                                        <audio style="width: 200px; height: 30px;" controls>
+                                            <source
+                                                src="\\a204\GRAVADOR\Disal\2020\10\13\7515\13102020_080310_7515_52098115_(47) 996830455_S.wav">
+                                        </audio>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                </div>
+
+            </div>
+    </body>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script>
+        // Mascara telefone
+        function mascara(o, f) {
+            v_obj = o
+            v_fun = f
+            setTimeout("execmascara()", 1)
+        }
+        function execmascara() {
+            v_obj.value = v_fun(v_obj.value)
+        }
+        function mtel(v) {
+            v = v.replace(/\D/g, "");             //Remove tudo o que não é dígito
+            v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+            v = v.replace(/(\d)(\d{4})$/, "$1-$2");    //Coloca hífen entre o quarto e o quinto dígitos
+            return v;
+        }
+        function id(el) {
+            return document.getElementById(el);
+        }
+        window.onload = function () {
+            id('telefone').onkeyup = function () {
+                mascara(this, mtel);
+            }
+        }
+    </script>
+
+    <script>
+        // Seleciona tipo da chamda
+        function callType() {
+            var adm = document.querySelector("select[name=adm]");
+            var grupo = document.querySelector("input[name=grupo]");
+            var cota = document.querySelector("input[name=cota]");
+            var type = document.querySelector("select[name=tipo-ligacao]").value;
+            var ramal = document.querySelector("select[name=ramal]")
+
+            if (type == 1) {
+                adm.disabled = false;
+                grupo.disabled = false;
+                cota.disabled = false;
+                ramal.disabled = true;
+            } else {
+                adm.disabled = true;
+                grupo.disabled = true;
+                cota.disabled = true;
+                ramal.disabled = false;
+            }
+        }
+
+        document
+            .querySelector("select[name=tipo-ligacao]")
+            .addEventListener("change", callType);
+    </script>
+
+    <script>
+        // Carrega campo de ramais
+        function selectExtension() {
+            var admValue = document.querySelector("select[name=adm]").value;
+            var admText = document.querySelector("select[name=adm]");
+            var admText2 = admText.options[admText.selectedIndex].text;
+            var extensionField = document.querySelector("select[name=ramal]");
+            var admHidden = document.querySelector("input[name=admHidden]");
+
+            admHidden.value = admText2
+
+            if (admValue == 0) {
+                extensionField.disabled = true;
+            } else {
+                extensionField.disabled = false;
+            }
+
+            for (var i = 0; i < extensionField.length; i++) {
+                if (extensionField.options[i].value != admValue) {
+                    extensionField.options[i].hidden = true;
+                } else {
+                    extensionField.options[i].hidden = false;
+                }
+            }
+
+        }
+
+        document
+            .querySelector("select[name=adm]")
+            .addEventListener("change", selectExtension);
+    </script>
+
+    <script>
+        // Alimenta campo de ramal hidden
+        function hiddenField() {
+            var ramalSelect = document.querySelector("select[name=ramal]");
+            var ramalSelect2 = ramalSelect.options[ramalSelect.selectedIndex].text;
+            var ramalHidden = document.querySelector("input[name=ramalHidden]")
+
+            ramalHidden.value = ramalSelect2
+        }
+
+        document
+            .querySelector("select[name=ramal]")
+            .addEventListener("change", hiddenField);
+    </script>
+
+    <script>
+        // Dark theme
+        function changeTheme() {
+            var check = document.querySelector("input[name=darkTheme]");
+            var color1 = document.querySelector("#color1");
+            var color2 = document.querySelector("#color2");
+            var color3 = document.querySelector("#body-theme")
+
+            if (check.checked) {
+                color1.classList.remove("text-dark");
+                color1.classList.remove("bg-light");
+                color2.classList.remove("table-light");
+                color3.classList.remove("body-color");
+
+                color1.classList.add("bg-dark");
+                color1.classList.add("text-white");
+                color2.classList.add("table-dark");
+                color3.classList.add("body-color-dark");
+            } else {
+                color1.classList.remove("bg-dark");
+                color1.classList.remove("text-white");
+                color2.classList.remove("table-dark");
+                color3.classList.remove("body-color-dark");
+
+                color1.classList.add("text-dark");
+                color1.classList.add("bg-light");
+                color2.classList.add("table-light");
+                color3.classList.add("body-color");
+            }
+        }
+
+        document
+            .querySelector("input[name=darkTheme]")
+            .addEventListener("click", changeTheme);
+    </script>
+
+    <script>
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("color2");
+            switching = true;
+            //Set the sorting direction to ascending:
+            dir = "asc";
+            /*Make a loop that will continue until
+            no switching has been done:*/
+            while (switching) {
+                //start by saying: no switching is done:
+                switching = false;
+                rows = table.rows;
+                /*Loop through all table rows (except the
+                first, which contains table headers):*/
+                for (i = 1; i < (rows.length - 1); i++) {
+                    //start by saying there should be no switching:
+                    shouldSwitch = false;
+                    /*Get the two elements you want to compare,
+                    one from current row and one from the next:*/
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    /*check if the two rows should switch place,
+                    based on the direction, asc or desc:*/
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            //if so, mark as a switch and break the loop:
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    /*If a switch has been marked, make the switch
+                    and mark that a switch has been done:*/
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    //Each time a switch is done, increase this count by 1:
+                    switchcount++;
+                } else {
+                    /*If no switching has been done AND the direction is "asc",
+                    set the direction to "desc" and run the while loop again.*/
+                    if (switchcount == 0 && dir == "asc") {
+                        dir = "desc";
+                        switching = true;
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .tableFixHead {
+            overflow-y: auto;
+            height: 800px;
+            margin-bottom: 50px;
+        }
+
+        .tableFixHead thead th {
+            position: sticky;
+            top: 0;
+        }
+
+        /* Just common table stuff. Really. */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            padding: 8px 16px;
+        }
+
+        th {
+            background: gray;
+            z-index: 1;
+        }
+    </style>
+
+    <style>
+        .switch__container {
+            margin-top: 10px;
+        }
+
+        .switch {
+            position: absolute;
+            margin-left: -9999px;
+            visibility: hidden;
+        }
+
+        .switch+label {
+            display: block;
+            position: relative;
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+        }
+
+        .switch--shadow+label {
+            padding: 2px;
+            width: 60px;
+            height: 30px;
+            background-color: #dddddd;
+            border-radius: 60px;
+        }
+
+        .switch--shadow+label:before,
+        .switch--shadow+label:after {
+            display: block;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            bottom: 1px;
+            content: '';
+        }
+
+        .switch--shadow+label:before {
+            right: 1px;
+            background-color: #f1f1f1;
+            border-radius: 60px;
+            transition: all 0.4s;
+        }
+
+        .switch--shadow+label:after {
+            width: 31px;
+            background-color: #fff;
+            border-radius: 100%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s;
+        }
+
+        .switch--shadow:checked+label:before {
+            background-color: #8ce196;
+        }
+
+        .switch--shadow:checked+label:after {
+            transform: translateX(30px);
+        }
+    </style>
+
+    <style>
+        .body-color {
+            background-color: white;
+            color: black;
+        }
+
+        .body-color-dark {
+            background-color: #1b1b1b;
+            color: white;
+        }
+
+        th {
+            cursor: pointer;
+        }
+
+        th:hover {
+            background-color: #f8771d;
+            border-radius: 10%;
+            transition: 0.5s;
+        }
+    </style>
+
+    <script src="/js/bootstrap.min.js"></script>
+
+</html>
