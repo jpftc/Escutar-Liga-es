@@ -4,7 +4,7 @@ class Call {
 
     static async GetCalls() {
         try {
-            var listCalls = await database.select().whereRaw("LIG_DATA >= dateadd(MINUTE, -5,GETDATE()) and LIG_ARQUIVO <> ' '").table("LIGACAO");
+            var listCalls = await database.select().whereRaw("LIG_DATA >= dateadd(MINUTE, -5,GETDATE()) and LIG_ARQUIVO <> ' '").table("LIGACAO").limit(10);
             return listCalls;
         } catch (err) {
             console.log(err);
@@ -13,7 +13,7 @@ class Call {
 
     static async GetCallsFiltered(dtInicio, dtFim, adm, ramal, grupo, cota, tel) {
 
-        var query = `select * from LIGACAO (nolock) where LIG_DATA >= '${dtInicio}' and LIG_DATA <= '${dtFim}' `
+        var query = `select * from LIGACAO (nolock) where LIG_DATA >= '${dtInicio}' and LIG_DATA <= '${dtFim}' and LIG_ARQUIVO <> '' `
         if (adm != "") {
             query = query + `and LIG_ADMINISTRADORA = '${adm}' `
         }
@@ -33,6 +33,8 @@ class Call {
         if (tel != "") {
             query = query + `and LIG_TELEFONE = '${tel}' `
         }
+
+        query = query + `order by LIG_DATA desc`
 
         try {
             var listCallsFiltered = await database.raw(query);

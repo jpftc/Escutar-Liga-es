@@ -1,14 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const bodyParser = require("body-parser");
-const session = require("express-session");
 const Users = require("../classes/controllers/Users");
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 router.get("/", (req, res) => {
-    res.render("login")
+    err = [
+        {
+            err: false
+        }
+    ]
+    res.render("login", {err: err})
 });
 
 router.post("/authenticate", (req, res) => {
@@ -22,14 +26,19 @@ router.post("/authenticate", (req, res) => {
 
             if (password == passwordBd) {
                 req.session.user = {
-                    user: user[0].nome
+                    username: user[0].nome
                 }
                 res.redirect("/recorder")
             } else {
-                res.redirect("/")
+                err = [
+                    {
+                        err: true
+                    }
+                ]
+                res.render("login", {err: err})
             }
         } else {
-            res.redirect("/")
+            res.render("login", {err: err})
         }
     }).catch(err => {
         console.log(err);

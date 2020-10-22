@@ -23,8 +23,9 @@
             <a href="/" class="navbar-brand">
                 <img src="/img/logo.png" alt="logo-guia">
             </a>
-            <button class="btn btn-outline-info btn-lg"
-                style="color: black; float: right; margin: 5px 35px 0 0;">Logout</button>
+            <a href="/logout">
+                <button class="btn btn-outline-info btn-lg"
+                    style="color: black; float: right; margin: 5px 35px 0 0;">Logout</button></a>
         </nav>
         <div class="container">
 
@@ -188,7 +189,7 @@
                                     <td>
                                         <audio style="width: 200px; height: 30px;" controls>
                                             <source
-                                                src="\\a204\GRAVADOR\Disal\2020\10\13\7515\13102020_080310_7515_52098115_(47) 996830455_S.wav">
+                                                src="/<%= call.LIG_ADMINISTRADORA %>/<%= call.LIG_DATA.toString().substr(11, 4) %>/<%= call.LIG_DATA.toLocaleDateString().substr(5,2) %>/<%= call.LIG_DATA.toString().substr(8, 2) %>/<%= call.LIG_RAMAL %>/<%= call.LIG_ARQUIVO+'.wav' %>">
                                         </audio>
                                     </td>
                                 </tr>
@@ -398,35 +399,6 @@
             }
         }
     </script>
-
-    <style>
-        .tableFixHead {
-            overflow-y: auto;
-            height: 800px;
-            margin-bottom: 50px;
-        }
-
-        .tableFixHead thead th {
-            position: sticky;
-            top: 0;
-        }
-
-        /* Just common table stuff. Really. */
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th,
-        td {
-            padding: 8px 16px;
-        }
-
-        th {
-            background: gray;
-            z-index: 1;
-        }
-    </style>
 
     <style>
         .switch__container {
